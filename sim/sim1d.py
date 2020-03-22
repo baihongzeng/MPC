@@ -66,7 +66,7 @@ def sim_run(options, MPC):
     fig = plt.figure(figsize=(FIG_SIZE[0], FIG_SIZE[1]))
     gs = gridspec.GridSpec(8,8)
 
-    # Elevator plot settings.
+    # Elevator plot settings.ref
     ax = fig.add_subplot(gs[:8, :8])
 
 

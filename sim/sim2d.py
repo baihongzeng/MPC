@@ -13,16 +13,16 @@ def sim_run(options, MPC):
     FIG_SIZE = options['FIG_SIZE'] # [Width, Height]
     OBSTACLES = options['OBSTACLES']
 
-    mpc = MPC()
+    mpc = MPC() # initialize cost function and model
 
-    num_inputs = 2
+    num_inputs = 2 #num of control inputs
     u = np.zeros(mpc.horizon*num_inputs)
     bounds = []
 
     # Set bounds for inputs bounded optimization.
     for i in range(mpc.horizon):
-        bounds += [[-1, 1]]
-        bounds += [[-0.8, 0.8]]
+        bounds += [[-1, 1]] # boundaries for pedal, i.e.,  -1 <= pedal <= 1
+        bounds += [[-0.8, 0.8]] # boundary for steering, i.e., -0.8 <= steering <= 0.8
 
     ref_1 = mpc.reference1
     ref_2 = mpc.reference2
@@ -48,8 +48,11 @@ def sim_run(options, MPC):
         print('Step ' + str(i) + ' of ' + str(sim_total) + '   Time ' + str(round(time.time() - start_time,5)))
         u = u_solution.x
         y = mpc.plant_model(state_i[-1], mpc.dt, u[0], u[1])
+
+        # Change the goal point from ref1 to ref2 after 130 iters
         if (i > 130 and ref_2 != None):
             ref = ref_2
+
         predicted_state = np.array([y])
         for j in range(1, mpc.horizon):
             predicted = mpc.plant_model(predicted_state[-1], mpc.dt, u[2*j], u[2*j+1])
